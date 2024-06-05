@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Aplicação para enviar email em formulário">
+  <meta name="keywords" content="segurança, email, nodemailer">
+  <meta name="author" content="Cielio Queiroz">
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="icon" href="./img/icons8-e-mail-96.png" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <title>Envio de e-mail</title>
+</head>
+<body>
+  <header>
+    <h1>Envio de E-mail</h1>
+  </header>
+  
+  <main>
+    <form id="email-form">
+      <h3>Digite abaixo</h3>
+      <div class="input-container">
+        <input
+          type="email"
+          name="sender"
+          id="sender-input"
+          placeholder="Digite seu e-mail remetente"
+          class="email-input"
+          required
+        />
+      </div>
+      <div class="input-container">
+        <input
+          type="email"
+          name="recipient"
+          id="recipient-input"
+          placeholder="Digite o e-mail destinatário"
+          class="email-input"
+          required
+        />
+      </div>
+      <div class="input-container">
+        <input
+          type="text"
+          name="subject"
+          id="subject-input"
+          placeholder="Digite o assunto"
+          class="subject-input"
+          required
+        />
+      </div>
+      <div class="input-container">
+        <textarea
+          name="text"
+          id="message-input"
+          placeholder="Digite a mensagem"
+          class="message-input"
+          required
+        ></textarea>
+      </div>
+      <button type="submit" id="send-button" class="btn">Enviar</button>
+    </form>
+  </main>
+  
+  <footer>
+    <p>&copy; <span id="year"></span> Todos os direitos reservados. 📩</p>
+  </footer>
+  
+  <script src="./script.js"></script>
+</body>
+</html>
