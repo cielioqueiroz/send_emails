@@ -7,7 +7,7 @@ const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
-app.use(express.static('public'));  // Servindo arquivos estáticos da pasta 'public'
+app.use(express.static('public')); 
 
 app.post('/send-email', (req, res) => {
   const { sender, recipient, subject, message } = req.body;

@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("email-form");
   const yearSpan = document.getElementById("year");
 
-  // Atualizar o ano no footer automaticamente
+  
   const currentYear = new Date().getFullYear();
   yearSpan.textContent = currentYear;
 
