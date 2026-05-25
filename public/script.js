@@ -1,64 +1,97 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("email-form");
-  const yearSpan = document.getElementById("year");
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('email-form');
+  const button = document.getElementById('send-button');
+  const yearSpan = document.getElementById('year');
 
-  
-  const currentYear = new Date().getFullYear();
-  yearSpan.textContent = currentYear;
+  const recipient = document.getElementById('recipient-input');
+  const subject = document.getElementById('subject-input');
+  const message = document.getElementById('message-input');
 
-  form.addEventListener("submit", async function (event) {
+  const subjectCount = document.getElementById('subject-count');
+  const messageCount = document.getElementById('message-count');
+
+  yearSpan.textContent = new Date().getFullYear();
+
+  const bindCounter = (input, output) => {
+    const update = () => { output.textContent = input.value.length; };
+    input.addEventListener('input', update);
+    update();
+  };
+  bindCounter(subject, subjectCount);
+  bindCounter(message, messageCount);
+
+  const toast = (icon, title) => {
+    if (typeof Swal === 'undefined') return alert(title);
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon,
+      title,
+      showConfirmButton: false,
+      timer: 3500,
+      timerProgressBar: true,
+    });
+  };
+
+  const setLoading = (loading) => {
+    button.disabled = loading;
+    button.classList.toggle('loading', loading);
+  };
+
+  const markInvalid = (el) => {
+    el.classList.add('invalid');
+    el.addEventListener('input', () => el.classList.remove('invalid'), { once: true });
+  };
+
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const sender = document.getElementById("sender-input").value;
-    const recipient = document.getElementById("recipient-input").value;
-    const subject = document.getElementById("subject-input").value;
-    const message = document.getElementById("message-input").value;
+    const data = {
+      recipient: recipient.value.trim(),
+      subject: subject.value.trim(),
+      message: message.value.trim(),
+    };
 
-    if (!sender || !recipient || !subject || !message) {
-      Toastify({
-        text: "Todos os campos são obrigatórios.",
-        backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-        duration: 3000
-      }).showToast();
-      return;
+    if (!data.recipient || !isValidEmail(data.recipient)) {
+      markInvalid(recipient);
+      return toast('error', 'Informe um e-mail de destinatário válido.');
+    }
+    if (!data.subject) {
+      markInvalid(subject);
+      return toast('error', 'O assunto é obrigatório.');
+    }
+    if (!data.message) {
+      markInvalid(message);
+      return toast('error', 'A mensagem é obrigatória.');
     }
 
+    setLoading(true);
     try {
       const response = await fetch('/send-email', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          sender,
-          recipient,
-          subject,
-          message,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(() => ({}));
+
       if (response.ok) {
-        Toastify({
-          text: "Email enviado com sucesso!",
-          backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-          duration: 3000
-        }).showToast();
+        toast('success', result.message || 'E-mail enviado com sucesso!');
         form.reset();
+        subjectCount.textContent = '0';
+        messageCount.textContent = '0';
+      } else if (response.status === 429) {
+        toast('warning', result.error || 'Muitas tentativas. Aguarde alguns minutos.');
       } else {
-        Toastify({
-          text: `Erro ao enviar o email: ${result.error}`,
-          backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-          duration: 3000
-        }).showToast();
+        toast('error', result.error || 'Erro ao enviar o e-mail.');
       }
     } catch (error) {
-      console.error("Erro ao enviar o email: ", error);
-      Toastify({
-        text: "Erro ao enviar o email. Por favor, tente novamente.",
-        backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
-        duration: 3000
-      }).showToast();
+      console.error('Falha na requisição:', error);
+      toast('error', 'Erro de conexão. Verifique sua rede e tente novamente.');
+    } finally {
+      setLoading(false);
     }
   });
 });

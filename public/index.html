@@ -3,70 +3,133 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Aplicação para enviar email em formulário">
-  <meta name="keywords" content="segurança, email, nodemailer">
-  <meta name="author" content="Cielio Queiroz">
+  <meta name="description" content="Envie e-mails de forma simples, rápida e segura." />
+  <meta name="keywords" content="email, envio, nodemailer, smtp" />
+  <meta name="author" content="Cielio Queiroz" />
+  <meta name="theme-color" content="#6366f1" />
+
+  <title>Envio de E-mail</title>
+
+  <link rel="icon" type="image/svg+xml" href="./img/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
   <link rel="stylesheet" href="./css/style.css" />
-  <link rel="icon" href="./img/icons8-e-mail-96.png" type="image/x-icon" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <title>Envio de e-mail</title>
 </head>
 <body>
-  <header>
-    <h1>Envio de E-mail</h1>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="m3 7 9 6 9-6"/>
+        </svg>
+      </span>
+      <span class="brand-name">MailSender</span>
+    </div>
   </header>
-  
-  <main>
-    <form id="email-form">
-      <h3>Digite abaixo</h3>
-      <div class="input-container">
-        <input
-          type="email"
-          name="sender"
-          id="sender-input"
-          placeholder="Digite seu e-mail remetente"
-          class="email-input"
-          required
-        />
+
+  <main class="container">
+    <section class="card" aria-labelledby="card-title">
+      <div class="card-header">
+        <h1 id="card-title">Enviar um e-mail</h1>
+        <p class="card-subtitle">
+          Preencha os campos abaixo. Sua mensagem será enviada com segurança.
+        </p>
       </div>
-      <div class="input-container">
-        <input
-          type="email"
-          name="recipient"
-          id="recipient-input"
-          placeholder="Digite o e-mail destinatário"
-          class="email-input"
-          required
-        />
-      </div>
-      <div class="input-container">
-        <input
-          type="text"
-          name="subject"
-          id="subject-input"
-          placeholder="Digite o assunto"
-          class="subject-input"
-          required
-        />
-      </div>
-      <div class="input-container">
-        <textarea
-          name="text"
-          id="message-input"
-          placeholder="Digite a mensagem"
-          class="message-input"
-          required
-        ></textarea>
-      </div>
-      <button type="submit" id="send-button" class="btn">Enviar</button>
-    </form>
+
+      <form id="email-form" novalidate>
+        <div class="field">
+          <label for="recipient-input">Destinatário</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+              <path d="m22 6-10 7L2 6"/>
+            </svg>
+            <input
+              type="email"
+              id="recipient-input"
+              name="recipient"
+              placeholder="destinatario@exemplo.com"
+              autocomplete="email"
+              required
+              maxlength="254"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="subject-input">Assunto</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <path d="M14 2v6h6"/>
+              <path d="M8 13h8"/>
+              <path d="M8 17h5"/>
+            </svg>
+            <input
+              type="text"
+              id="subject-input"
+              name="subject"
+              placeholder="Assunto da mensagem"
+              required
+              maxlength="200"
+            />
+          </div>
+          <div class="counter">
+            <span id="subject-count">0</span>/200
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="message-input">Mensagem</label>
+          <textarea
+            id="message-input"
+            name="message"
+            placeholder="Escreva sua mensagem aqui..."
+            rows="7"
+            required
+            maxlength="5000"
+          ></textarea>
+          <div class="counter">
+            <span id="message-count">0</span>/5000
+          </div>
+        </div>
+
+        <button type="submit" id="send-button" class="btn-primary">
+          <span class="btn-content">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m22 2-7 20-4-9-9-4 20-7z"/>
+              <path d="M22 2 11 13"/>
+            </svg>
+            <span class="btn-text">Enviar</span>
+          </span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+    </section>
   </main>
-  
-  <footer>
-    <p>&copy; <span id="year"></span> Todos os direitos reservados. 📩</p>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> MailSender · Todos os direitos reservados.</p>
   </footer>
-  
-  <script src="./script.js"></script>
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"
+    defer
+  ></script>
+  <script src="./script.js" defer></script>
 </body>
 </html>
